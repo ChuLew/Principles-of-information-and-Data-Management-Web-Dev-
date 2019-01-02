@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>search</title>
+<style>
+.button {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+.button:hover {
+    background-color: grey;
+    color: white;
+}
+</style>
+</head>
+<body>
+
+<p id="demo"> red if script runs </p>
+
+<script> 
+document.getElementById("demo").style.color = "red";
+page import="java.sql.*"
+page import="javax.sql.*"
+page import="java.util.LinkedList"
+page import="java.util.ListIterator"
+page import="java.awt.List"
+
+String search = request.getParameter("search2");
+String []terms = search.split(" ");
+
+//no param
+if(terms.length==0){
+	
+// no matching results
+}
+//create result field
+var results=document.createElement('p');
+document.body.appendChild(results);
+//test
+results.textContent='hello world';
+
+//elim duplicates
+var lastWord=0;
+for(i=0; i<terms.length; i++){
+	if(terms[i]!="") {
+		lastWord=i;
+		for(j=i+1; j<terms.length; j++){
+			if(terms[i].equalsIgnoreCase(terms[j])){
+			terms[j]="";
+			}
+		}		
+	}
+}
+
+//build query
+String sql = "select distinct I.name, I.item_id from Items I, Keywords_Desc k where I.item_id = k.item_id and (k.word=";
+for(i=0; i<terms.length; i++){
+	if(!terms[i].equals("")){
+		sql=sql+"'"+terms[i]+"'";	
+		if(i!=terms.length-1) sql=sql+" or ";
+	}
+}
+sql=sql+")";
+
+//get db results
+Class.forName("com.mysql.jdbc.Driver");
+java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://mitchlewdbinstance.cgkdmmiwqxzv.us-east-2.rds.amazonaws.com/MitchLew", "Chu_Lew","Mountainboy");
+Statement st = con.createStatement();
+ResultSet rs = st.executeQuery(sql);
+
+//generate results
+while(rs.next()){
+
+	
+}
+con.close();
+out.println(sql);	
+</script>
+
+</body>
+</html>
